@@ -14,6 +14,7 @@ let resetButton = document.getElementById('btn-reset');
 
 block_0.addEventListener('click', () => {
     game1.makeMove(1)
+    //block_0.className += (" playerWin");
 })
 block_1.addEventListener('click', () => {
     game1.makeMove(2)
@@ -96,6 +97,52 @@ class Board{
                 break;                
         }
     }
+
+    updateAnswerFront(ansNumber, player){
+        let classToAdd = player=='X' ? " playerWin" : " computerWin";
+        switch(ansNumber){
+            case 1:
+                block_0.className += classToAdd;
+                block_1.className +=  (classToAdd);
+                block_2.className += (classToAdd);
+                break;
+            case 2:
+                block_3.className += (classToAdd);
+                block_4.className += (classToAdd);
+                block_5.className += (classToAdd);
+                break;
+            case 3:
+                block_6.className += (classToAdd);
+                block_7.className += (classToAdd);
+                block_8.className += (classToAdd);
+                break;  
+            case 4:
+                block_0.className += (classToAdd);
+                block_3.className += (classToAdd);
+                block_6.className += (classToAdd);
+                break;
+            case 5:
+                block_1.className += (classToAdd);
+                block_4.className += (classToAdd);
+                block_7.className += (classToAdd);
+                break; 
+            case 6:
+                block_2.className += (classToAdd);
+                block_5.className += (classToAdd);
+                block_8.className += (classToAdd);
+                break;
+            case 7:
+                block_0.className += (classToAdd);
+                block_4.className += (classToAdd);
+                block_8.className += (classToAdd);
+                break;
+            case 8:
+                block_2.className += (classToAdd);
+                block_4.className += (classToAdd);
+                block_6.className += (classToAdd);
+                break;                
+        }
+    }
 };
 
 class refree{
@@ -107,30 +154,32 @@ class refree{
         this.positionY = movPos%3;
     }
     rowChecker(symbol,board) {
-        for(let row=0;row<3;row++)
+        let row;
+        for(row=0;row<3;row++)
         {
             if(symbol!=board[this.positionX][row])
             {
-                return false;
+                return 0;
             }
         }
-        return true;
+        return 1+this.positionX;
     }
     columnChecker(symbol,board) {
-        for(let col=0;col<3;col++)
+        let col;
+        for(col=0;col<3;col++)
         {
             if(symbol!=board[col][this.positionY])
             {
-                return false;
+                return 0;
             }
         }
-        return true;
+        return 4+this.positionY;
     }
     diagonalChecker(symbol,board) {
-        if(board[0][0]===board[1][1] && board[1][1]===board[2][2] && board[1][1]===symbol) return true;
-        else if(board[2][0]===board[1][1] && board[1][1]===board[0][2] && board[1][1]===symbol) return true;
+        if(board[0][0]===board[1][1] && board[1][1]===board[2][2] && board[1][1]===symbol) return 7;
+        else if(board[2][0]===board[1][1] && board[1][1]===board[0][2] && board[1][1]===symbol) return 8;
 
-        return false;
+        return 0;
     }
 
     legalMove(board, move) {   
@@ -194,8 +243,10 @@ class TicTacToe {
         
         resultDiv.textContent = "";
         
-
-        if(this.rfre.checkWin(this.b.boardArray, move)===true){
+        let checkAnswer = this.rfre.checkWin(this.b.boardArray, move);
+        if(checkAnswer>0){
+            //update of answer front
+            this.b.updateAnswerFront(checkAnswer, this.whichPlayerMove);
             playerDiv.textContent = "Player " + this.whichPlayerMove + " Won!";
             this.state = true;
             return;
@@ -209,6 +260,15 @@ class TicTacToe {
             //draw
             playerDiv.textContent = "It's a Draw!";
             resultDiv.textContent = "Please Reset the game!";
+            block_0.classList.add("draw");
+            block_1.classList.add("draw");
+            block_2.classList.add("draw");
+            block_3.classList.add("draw");
+            block_4.classList.add("draw");
+            block_5.classList.add("draw");
+            block_6.classList.add("draw");
+            block_7.classList.add("draw");
+            block_8.classList.add("draw");         
             return;
         }
         resultDiv.textContent = "";
@@ -230,6 +290,16 @@ class TicTacToe {
         block_6.textContent = "";
         block_7.textContent = "";
         block_8.textContent = "";
+        block_0.classList.remove("playerWin", "computerWin", "draw");
+        block_1.classList.remove("playerWin", "computerWin", "draw");
+        block_2.classList.remove("playerWin", "computerWin", "draw");
+        block_3.classList.remove("playerWin", "computerWin", "draw");
+        block_4.classList.remove("playerWin", "computerWin", "draw");
+        block_5.classList.remove("playerWin", "computerWin", "draw");
+        block_6.classList.remove("playerWin", "computerWin", "draw");
+        block_7.classList.remove("playerWin", "computerWin", "draw");
+        block_8.classList.remove("playerWin", "computerWin", "draw");
+
         this.whichPlayerMove = 'X';
         playerDiv.textContent = "X's Turn!";
         resultDiv.textContent = "";
